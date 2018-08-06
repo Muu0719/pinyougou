@@ -5,15 +5,16 @@
     <artifactId>pinyougou-parent</artifactId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+  
   <groupId>com.pinyougou</groupId>
   <artifactId>pinyougou-manager</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
+  <!--相对路径 要加../!!!!!!!!-->
   <modules>
-  	<module>pinyougou-manager-interface</module>
-  	<module>pinyougou-manager-service</module>
+  	<module>../pinyougou-manager-interface</module>
+  	<module>../pinyougou-manager-service</module> 
   </modules>
-  
   <build>
   		<plugins>
 				<!-- 配置Tomcat插件 -->
