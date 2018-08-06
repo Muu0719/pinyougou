@@ -26,6 +26,13 @@
 
 	<!-- 自定义模块 -->
 	var app = angular.module('pinyougou', [ 'pagination' ]);
+	
+	app.service('brandService',function($http){
+		this.findPage = function(pageNum,pageSize){
+			return $http.get('../brand/findPage?pageNum=' + pageNum + '&pageSize=' + pageSize);
+		}
+		
+	});
 	<!--自定义控制器 -->
 	app.controller('brandController', function($scope, $http) {
 
@@ -49,7 +56,7 @@
 
 		//分页查询的方法
 		$scope.findPage = function(pageNum, pageSize) {
-			$http.get('../brand/findPage?pageNum=' + pageNum + '&pageSize=' + pageSize).success(function(response) {
+			brandService.findPage(pageNum,pageSize).success(function(response) {
 				$scope.list = response.list;
 				//再修改一下分页组件
 				$scope.paginationConf.totalItems = response.total;
