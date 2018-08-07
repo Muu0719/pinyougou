@@ -97,10 +97,17 @@
     </if>
   </delete>
   <insert id="insert" parameterType="com.pinyougou.pojo.TbSpecification" >
+  	<selectKey keyColumn="id" keyProperty="id" resultType="long" order="AFTER">
+	  	SELECT LAST_INSERT_ID()
+	  </selectKey>
     insert into tb_specification (id, spec_name)
     values (#{id,jdbcType=BIGINT}, #{specName,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.pinyougou.pojo.TbSpecification" >
+  <!-- 配置主键返回 -->
+	  <selectKey keyColumn="id" keyProperty="id" resultType="long" order="AFTER">
+	  	SELECT LAST_INSERT_ID()
+	  </selectKey>
     insert into tb_specification
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
