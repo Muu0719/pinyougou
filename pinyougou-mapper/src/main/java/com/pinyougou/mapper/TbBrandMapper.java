@@ -2,9 +2,6 @@ package com.pinyougou.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Select;
-
-import com.github.pagehelper.Page;
 import com.pinyougou.pojo.TbBrand;
 
 public interface TbBrandMapper {

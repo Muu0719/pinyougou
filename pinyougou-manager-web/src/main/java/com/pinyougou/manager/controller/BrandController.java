@@ -20,7 +20,6 @@ public class BrandController {
 	
 	@RequestMapping("/search")
 	public PageResult search(Integer pageNum, Integer pageSize, @RequestBody TbBrand tbBrand) {
-		System.out.println("当前页:"+pageNum);
 		PageResult pageResult = brandService.search(pageNum,pageSize,tbBrand);
 		return pageResult;
 	}
