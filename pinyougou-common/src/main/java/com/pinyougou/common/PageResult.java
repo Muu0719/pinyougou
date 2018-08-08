@@ -5,7 +5,8 @@ import java.util.List;
 
 public class PageResult implements Serializable{
 
-	private Long total;//总记录数
+	private Long total;//总记录数?????wzt
+	
 	
 	private List rows;//每页显示的集合数据
 
