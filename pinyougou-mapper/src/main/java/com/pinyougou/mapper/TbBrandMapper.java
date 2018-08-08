@@ -2,21 +2,24 @@ package com.pinyougou.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Select;
+
+import com.github.pagehelper.Page;
 import com.pinyougou.pojo.TbBrand;
 
 public interface TbBrandMapper {
-
+	
+	@Select("select id,name,first_char as firstChar from tb_brand")
 	List<TbBrand> findAll();
 
-	void add(TbBrand tbBrand);
+	void add(TbBrand brand);
 
 	TbBrand findOne(Long id);
 
-	void update(TbBrand tbBrand);
+	void update(TbBrand brand);
 
-	void deleteBrand(Integer id);
+	void dele(Long id);
 
-	List<TbBrand> search(TbBrand tbBrand);
+	Page<TbBrand> search(TbBrand brand);
 
-	
 }

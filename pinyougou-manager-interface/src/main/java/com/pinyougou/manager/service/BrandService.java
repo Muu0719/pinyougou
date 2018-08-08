@@ -7,87 +7,53 @@ import com.pinyougou.pojo.TbBrand;
 
 public interface BrandService {
 
-	/** 
-	
-	 * @Title:        findAll 
-	 * @Description:  查询所有品牌
-	 * @param:        @return    
-	 * @return:       List<TbBrand>    
-	 * @throws 
-	 * @author        Muu_E-mail:369566919@qq.com
-	 * @Date          2018-08-04 15:08:28
+	/**
+	 * 查询品牌列表
+	 * @return
 	 */
 	List<TbBrand> findAll();
 
-	/** 
-	
-	 * @Title:        findPage 
-	 * @Description:  分页查询品牌
-	 * @param:        @param page
-	 * @param:        @param size
-	 * @param:        @return    
-	 * @return:       PageResult    
-	 * @throws 
-	 * @author        Muu_E-mail:369566919@qq.com
-	 * @Date          2018-08-04 21:08:11
+	/**
+	 * 好习惯：在接口上加注释：
+	 * 分页查询品牌列表
+	 * @param page
+	 * @param size
+	 * @return
 	 */
-	PageResult findPage(Integer pageNum,Integer pageSize);
+	public PageResult findPage(Integer page, Integer size);
 
-	
-	/** 
-	
-	 * @Title:        add 
-	 * @Description:  添加新品牌
-	 * @param:        @param tbBrand    
-	 * @return:       void     
-	 * @Date          2018-08-05 21:08:00
+	/**
+	 * 添加品牌
+	 * @param brand
 	 */
-	void add(TbBrand tbBrand);
+	void add(TbBrand brand);
+	
+	/**
+	 * 根据品牌ID查询品牌对象
+	 * @param id
+	 * @return
+	 */
+	public TbBrand findOne(Long id);
 
-	/** 
-	
-	 * @Title:        findOne 
-	 * @Description:  根据品牌-Id查询品牌信息
-	 * @param:        @param id
-	 * @param:        @return    
-	 * @return:       TbBrand     
-	 * @Date          2018-08-05 22:08:10
+	/**
+	 * 修改品牌
+	 * @param brand
 	 */
-	TbBrand findOne(Long id);
+	void update(TbBrand brand);
 
-	
-	/** 
-	
-	 * @Title:        update 
-	 * @Description:  修改品牌-信息
-	 * @param:        @param tbBrand    
-	 * @return:       void     
-	 * @Date          2018-08-05 22:08:35
+	/**
+	 * 根据多个ID删除品牌
+	 * @param ids
 	 */
-	void update(TbBrand tbBrand);
+	void dele(Long[] ids);
 
-	
-	/** 
-	
-	 * @Title:        deleteBrand 
-	 * @Description:  删除品牌-1orN
-	 * @param:        @param selectIds    
-	 * @return:       void     
-	 * @Date          2018-08-05 23:08:34
+	/**
+	 * 根据条件对象分页
+	 * @param page
+	 * @param size
+	 * @param brand
+	 * @return
 	 */
-	void deleteBrand(Integer[] selectIds);
-
+	PageResult search(Integer page, Integer size, TbBrand brand);
 	
-	/** 
-	
-	 * @Title:        search 
-	 * @Description:  条件搜索查询(本模块替代findPage了)
-	 * @param:        @param pageNum
-	 * @param:        @param pageSize
-	 * @param:        @param tbBrand
-	 * @param:        @return    
-	 * @return:       PageResult     
-	 * @Date          2018-08-06 08:08:52
-	 */
-	PageResult search(Integer pageNum, Integer pageSize, TbBrand tbBrand);
 }
