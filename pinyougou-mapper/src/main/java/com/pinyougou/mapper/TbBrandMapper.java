@@ -1,6 +1,7 @@
 package com.pinyougou.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Select;
 
@@ -21,5 +22,7 @@ public interface TbBrandMapper {
 	void dele(Long id);
 
 	Page<TbBrand> search(TbBrand brand);
+
+	List<Map> findBrandList();
 
 }

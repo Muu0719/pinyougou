@@ -1,5 +1,8 @@
 package com.pinyougou.manager.service;
 
+import java.util.List;
+import java.util.Map;
+
 import com.pinyougou.common.PageResult;
 import com.pinyougou.pojo.SpecificationVo;
 import com.pinyougou.pojo.TbSpecification;
@@ -33,5 +36,11 @@ public interface SpecificationService {
 	 * @param vo
 	 */
 	void update(SpecificationVo vo);
+
+	/**
+	 * 查询规格Map列表
+	 * @return
+	 */
+	List<Map> findSpecList();
 
 }

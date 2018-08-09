@@ -1,6 +1,7 @@
 package com.pinyougou.manager.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -72,6 +73,11 @@ public class BrandServiceImpl implements BrandService {
 		Page<TbBrand> pageResult = (Page<TbBrand>)brandMapper.search(brand);
 		
 		return new PageResult(pageResult.getTotal(), pageResult.getResult());
+	}
+
+	@Override
+	public List<Map> findBrandList() {
+		return brandMapper.findBrandList();
 	}
 
 }

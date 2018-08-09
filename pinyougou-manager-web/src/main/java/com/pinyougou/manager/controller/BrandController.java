@@ -1,6 +1,7 @@
 package com.pinyougou.manager.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -77,6 +78,11 @@ public class BrandController {
 	@RequestMapping("search")
 	public PageResult search(Integer page, Integer size, @RequestBody TbBrand brand){
 		return brandService.search(page,size,brand);
+	}
+	
+	@RequestMapping("findBrandList")
+	public List<Map> findBrandList(){
+		return brandService.findBrandList();
 	}
 	
 }

@@ -22,4 +22,7 @@ app.service('brandService',function($http){
 		//调用后台的接口URL
 		return $http.post("../brand/search?page="+page+"&size="+size,searchEntity);
 	}
+	this.findBrandList=function(){
+		return $http.get("../brand/findBrandList");
+	}
 });

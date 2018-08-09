@@ -12,4 +12,7 @@ app.service("specificationService",function($http){
 	this.update=function(entity){
 		return $http.post("../specification/update",entity);
 	}
+	this.findSpecList=function(){
+		return $http.get("../specification/findSpecList");
+	}
 });

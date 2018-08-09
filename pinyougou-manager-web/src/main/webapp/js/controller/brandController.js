@@ -43,12 +43,12 @@ app.controller('brandController',function($scope,$controller,brandService){
 	}
 	// 删除
 	$scope.dele=function(){
-		brandService.dele($scope.selectId).success(function(response){
+		brandService.dele($scope.selectIds).success(function(response){
 			if(response.success){
 				// 刷新页面
 				$scope.reloadList();
 				// 清空选择的ID
-				$scope.selectId=[];
+				$scope.selectIds=[];
 			} else{
 				alert(response.message);
 			}

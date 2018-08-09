@@ -1,6 +1,7 @@
 package com.pinyougou.manager.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -93,6 +94,11 @@ public class SpecificationServiceImpl implements SpecificationService {
 			specificationOptionMapper.insertSelective(specificationOption);
 		}
 		
+	}
+
+	@Override
+	public List<Map> findSpecList() {
+		return specificationMapper.findSpecList();
 	}
 
 }
