@@ -1,4 +1,3 @@
- //控制层 
 app.controller('itemCatController' ,function($scope,$controller ,typeTemplateService  ,itemCatService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
@@ -61,7 +60,9 @@ app.controller('itemCatController' ,function($scope,$controller ,typeTemplateSer
 		itemCatService.dele( $scope.selectIds ).success(
 			function(response){
 				if(response.success){
-					$scope.reloadList();//刷新列表
+					//需要返回当前目录分级的页面
+//					$scope.selectList(entity);
+					$scope.findByParentId($scope.parentId);
 				}						
 			}		
 		);				

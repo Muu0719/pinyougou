@@ -7,27 +7,27 @@ app.service('itemCatService',function($http){
 	}
 	//分页 
 	this.findPage=function(page,rows){
-		return $http.get('../itemCat/findPage?page='+page+'&rows='+rows);
+		return $http.get('../itemCat/findPage.do?page='+page+'&rows='+rows);
 	}
 	//查询实体
 	this.findOne=function(id){
-		return $http.get('../itemCat/findOne?id='+id);
+		return $http.get('../itemCat/findOne.do?id='+id);
 	}
 	//增加 
 	this.add=function(entity){
-		return  $http.post('../itemCat/add',entity );
+		return  $http.post('../itemCat/add.do',entity );
 	}
 	//修改 
 	this.update=function(entity){
-		return  $http.post('../itemCat/update',entity );
+		return  $http.post('../itemCat/update.do',entity );
 	}
 	//删除
 	this.dele=function(ids){
-		return $http.get('../itemCat/delete?ids='+ids);
+		return $http.get('../itemCat/delete.do?ids='+ids);
 	}
 	//搜索
 	this.search=function(page,rows,searchEntity){
-		return $http.post('../itemCat/search?page='+page+"&rows="+rows, searchEntity);
+		return $http.post('../itemCat/search.do?page='+page+"&rows="+rows, searchEntity);
 	}    
 	this.findByParentId=function(parentId){
 		return $http.get("../itemCat/findByParentId?parentId="+parentId);
