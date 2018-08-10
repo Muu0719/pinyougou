@@ -43,7 +43,7 @@ public class BrandController {
 			return new Result(true, "操作成功");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return new Result(false, "操作失败");
+			return new Result(false, "操123作失败");
 		}
 	}
 	

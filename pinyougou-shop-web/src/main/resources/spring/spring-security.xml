@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans
+	xmlns="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						http://www.springframework.org/schema/security 
+						http://www.springframework.org/schema/security/spring-security.xsd">
+	
+	<!-- 放行的页面必须写早最上边,路径/*是一层级目录下所有文件,/**是目录下所有内容,包含所有子级目录和文件 -->
+	<http pattern="/js/**" security="none"></http>
+	<http pattern="/css/**" security="none"></http>
+	<http pattern="/img/**" security="none"></http>
+	<http pattern="/plugins/**" security="none"></http>
+	<http pattern="/shoplogin.html" security="none"></http>
+	<http pattern="/register.html" security="none"></http>
+	<http pattern="/seller/add" security="none"></http>
+	<!-- 默认为true，表达式语法忽略 -->
+	<http use-expressions="false">
+		<!-- 退出标签 -->		
+		<logout  invalidate-session="true"
+				logout-success-url="/shoplogin.html"
+				logout-url="/logout"/>
+		<!-- /* 和 /** 有什么区别：拦截请求的路径；/*是拦截一级目录：lcoalhost:8081/login.html；/**是拦截所有目录 
+			: lcoalhost:8081/admin/index.html -->
+		<intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_SELLER" />
+		<!-- 设置登录页面的 配置,1,登录页面地址,2,页面表单中name属性值对应的参数名称(默认就是username和password),
+			3和4:always-use-default-target：指定了是否在身份验证通过后总是跳转到default-target-url属性指定的UR-->
+		<form-login login-page="/shoplogin.html" 
+			username-parameter="username" password-parameter="password"
+			default-target-url="/admin/index.html"
+			always-use-default-target="true" />
+		<!-- 跳过浏览器认证这个是限制跨域访问还是什么鬼来着?... -->
+		<csrf disabled="true" />
+		<!-- 放行页面中的框架拦截: SAMEORIGIN:不拦截 -->
+<!-- 		如果你在系统中使用了框架页，需要设置框架页的策略为SAMEORIGIN -->
+		<headers>
+			<frame-options policy="SAMEORIGIN" /> <!-- 相同起源 -->
+		</headers>
+	</http>
+	
+	
+	<!-- 配置认证器 -->
+	<authentication-manager>
+		<authentication-provider user-service-ref="userDetailsServiceImpl">
+<!-- 			<user-service> -->
+<!-- 				先写两个假用户 -->
+<!-- 				<user name="admin" password="admin" authorities="ROLE_ADMIN" /> -->
+<!-- 				<user name="user" password="user" authorities="ROLE_ADMIN" /> -->
+<!-- 			</user-service> -->
+		</authentication-provider>
+	</authentication-manager>
+	<!-- 认证类 -->
+	<beans:bean id="userDetailsServiceImpl" class="com.pinyougou.shop.service.UserDetailsServiceImpl"></beans:bean>
+</beans:beans>
