@@ -3,6 +3,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
@@ -50,6 +51,9 @@ public class SellerServiceImpl implements SellerService {
 	public void add(TbSeller seller) {
 		seller.setStatus("0");
 		seller.setCreateTime(new Date());
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String password = encoder.encode(seller.getPassword());
+		seller.setPassword(password);
 		sellerMapper.insertSelective(seller);		
 	}
 
