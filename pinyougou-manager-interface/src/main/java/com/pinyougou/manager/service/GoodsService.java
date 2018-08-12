@@ -1,7 +1,7 @@
 package com.pinyougou.manager.service;
 import java.util.List;
 import com.pinyougou.pojo.TbGoods;
-
+import com.pinyougou.pojo.vo.GoodsVo;
 import com.pinyougou.common.PageResult;
 /**
  * 服务层接口
@@ -27,7 +27,7 @@ public interface GoodsService {
 	/**
 	 * 增加
 	*/
-	public void add(TbGoods goods);
+	public void add(GoodsVo goodsVo);
 	
 	
 	/**
