@@ -1,5 +1,6 @@
  //控制层 
-app.controller('goodsController' ,function($scope,$controller   ,goodsService){	
+app.controller('goodsController' ,function($scope,$controller, itemCatService,
+		typeTemplateService, goodsService,uploadService){	
 	
 	$controller('baseController',{$scope:$scope});//继承
 	
@@ -80,6 +81,61 @@ app.controller('goodsController' ,function($scope,$controller   ,goodsService){
 				$scope.paginationConf.totalItems=response.total;//更新总记录数
 			}			
 		);
+	};
+	
+	$scope.selectItemCat1List = function(){
+		itemCatService.findByParentId('0').success(function(response){
+			$scope.itemCat1List = response;
+			$scope.itemCat2List = {};
+			$scope.itemCat3List = {};
+		})
+	};
+	
+	$scope.$watch('entity.goods.category1Id',function(newValue, oldValue){
+		itemCatService.findByParentId(newValue).success(function(response){
+			$scope.itemCat2List = response;
+			$scope.itemCat3List = {};
+		})
+	});
+	
+	$scope.$watch('entity.goods.category2Id',function(newValue, oldValue){
+		itemCatService.findByParentId(newValue).success(function(response){
+			$scope.itemCat3List = response;
+		})
+	});
+	
+	$scope.$watch('entity.goods.category3Id',function(newValue, oldValue){
+		itemCatService.findOne(newValue).success(function(response){
+			$scope.entity.goods.typeTemplateId = response.typeId;
+		})
+	});
+	
+	$scope.$watch('entity.goods.typeTemplateId',function(newValue,oldValue){
+		typeTemplateService.findOne(newValue).success(function(response){
+			$scope.typeTemplate = response;
+			$scope.entity.goodsDesc.customAttributeItems = JSON.parse($scope.typeTemplate.customAttributeItems);
+			$scope.typeTemplate.brandIds = JSON.parse($scope.typeTemplate.brandIds);
+		})
+	})
+	
+	$scope.uploadFile = function(){
+		uploadService.uploadFile().success(function(response){
+			if(response.success){
+				$scope.entity_image.url = response.message;
+			}else {
+				alert(response.message);
+			}
+		})
+	};
+	
+	$scope.entity={goods:{},goodsDesc:{itemImages:[],specificationItems:[]}};
+	
+	//把上传的图片对象保存在描述itemImages数组中
+	$scope.addImageToList=function(){
+		$scope.entity.goodsDesc.itemImages.push($scope.entity_image);
 	}
-    
+	//从图片数组中删除
+	$scope.deleImageToList=function(index){
+		$scope.entity.goodsDesc.itemImages.splice(index,1);
+	}
 });	
