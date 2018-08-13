@@ -66,5 +66,13 @@ public interface TypeTemplateService {
 	 * @return
 	 */
 	public List<Map> findTypeTemplateList();
+
+
+	/**
+	 * 根据模板ID获取规格及规格选项集合数据
+	 * @param typeId
+	 * @return
+	 */
+	public List<Map> findSpecList(Long typeId);
 	
 }

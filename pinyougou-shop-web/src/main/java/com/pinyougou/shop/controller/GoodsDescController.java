@@ -1,35 +1,34 @@
 package com.pinyougou.shop.controller;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.pojo.TbGoodsDesc;
+import com.pinyougou.manager.service.GoodsDescService;
+
 import com.pinyougou.common.PageResult;
 import com.pinyougou.common.Result;
-import com.pinyougou.manager.service.TypeTemplateService;
-import com.pinyougou.pojo.TbTypeTemplate;
 /**
  * controller
  * @author Administrator
  *
  */
 @RestController
-@RequestMapping("/typeTemplate")
-public class TypeTemplateController {
+@RequestMapping("/goodsDesc")
+public class GoodsDescController {
 
 	@Reference
-	private TypeTemplateService typeTemplateService;
+	private GoodsDescService goodsDescService;
 	
 	/**
 	 * 返回全部列表
 	 * @return
 	 */
 	@RequestMapping("/findAll")
-	public List<TbTypeTemplate> findAll(){			
-		return typeTemplateService.findAll();
+	public List<TbGoodsDesc> findAll(){			
+		return goodsDescService.findAll();
 	}
 	
 	
@@ -39,18 +38,18 @@ public class TypeTemplateController {
 	 */
 	@RequestMapping("/findPage")
 	public PageResult  findPage(int page,int rows){			
-		return typeTemplateService.findPage(page, rows);
+		return goodsDescService.findPage(page, rows);
 	}
 	
 	/**
 	 * 增加
-	 * @param typeTemplate
+	 * @param goodsDesc
 	 * @return
 	 */
 	@RequestMapping("/add")
-	public Result add(@RequestBody TbTypeTemplate typeTemplate){
+	public Result add(@RequestBody TbGoodsDesc goodsDesc){
 		try {
-			typeTemplateService.add(typeTemplate);
+			goodsDescService.add(goodsDesc);
 			return new Result(true, "增加成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -60,13 +59,13 @@ public class TypeTemplateController {
 	
 	/**
 	 * 修改
-	 * @param typeTemplate
+	 * @param goodsDesc
 	 * @return
 	 */
 	@RequestMapping("/update")
-	public Result update(@RequestBody TbTypeTemplate typeTemplate){
+	public Result update(@RequestBody TbGoodsDesc goodsDesc){
 		try {
-			typeTemplateService.update(typeTemplate);
+			goodsDescService.update(goodsDesc);
 			return new Result(true, "修改成功");
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -80,8 +79,8 @@ public class TypeTemplateController {
 	 * @return
 	 */
 	@RequestMapping("/findOne")
-	public TbTypeTemplate findOne(Long id){
-		return typeTemplateService.findOne(id);		
+	public TbGoodsDesc findOne(Long id){
+		return goodsDescService.findOne(id);		
 	}
 	
 	/**
@@ -92,7 +91,7 @@ public class TypeTemplateController {
 	@RequestMapping("/delete")
 	public Result delete(Long [] ids){
 		try {
-			typeTemplateService.delete(ids);
+			goodsDescService.delete(ids);
 			return new Result(true, "删除成功"); 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -108,19 +107,8 @@ public class TypeTemplateController {
 	 * @return
 	 */
 	@RequestMapping("/search")
-	public PageResult search(@RequestBody TbTypeTemplate typeTemplate, int page, int rows  ){
-		return typeTemplateService.findPage(typeTemplate, page, rows);		
+	public PageResult search(@RequestBody TbGoodsDesc goodsDesc, int page, int rows  ){
+		return goodsDescService.findPage(goodsDesc, page, rows);		
 	}
-	
-	@RequestMapping("findTypeTemplateList")
-	public List<Map> findTypeTemplateList(){
-		return typeTemplateService.findTypeTemplateList();
-	}
-	
-	@RequestMapping("findSpecList")
-	public List<Map> findSpecList(Long typeId){
-		return typeTemplateService.findSpecList(typeId);
-	}
-	
 	
 }

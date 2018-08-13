@@ -5,11 +5,11 @@ app.service('typeTemplateService',function($http){
 	this.findAll=function(){
 		return $http.get('../typeTemplate/findAll');		
 	}
-	//分页查询
+	//分页 
 	this.findPage=function(page,rows){
 		return $http.get('../typeTemplate/findPage?page='+page+'&rows='+rows);
 	}
-	//通过ID查询实体
+	//查询实体
 	this.findOne=function(id){
 		return $http.get('../typeTemplate/findOne?id='+id);
 	}
@@ -28,5 +28,11 @@ app.service('typeTemplateService',function($http){
 	//搜索
 	this.search=function(page,rows,searchEntity){
 		return $http.post('../typeTemplate/search?page='+page+"&rows="+rows, searchEntity);
-	}    	
+	}    
+	this.findTypeTemplateList=function(){
+		return $http.get("../typeTemplate/findTypeTemplateList");
+	}
+	this.findSpecList=function(typeId){
+		return $http.get("../typeTemplate/findSpecList?typeId="+typeId);
+	}
 });

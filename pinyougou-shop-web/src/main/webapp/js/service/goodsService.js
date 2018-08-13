@@ -5,11 +5,11 @@ app.service('goodsService',function($http){
 	this.findAll=function(){
 		return $http.get('../goods/findAll');		
 	}
-	//分页查询
+	//分页 
 	this.findPage=function(page,rows){
 		return $http.get('../goods/findPage?page='+page+'&rows='+rows);
 	}
-	//通过ID查询实体
+	//查询实体
 	this.findOne=function(id){
 		return $http.get('../goods/findOne?id='+id);
 	}

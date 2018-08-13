@@ -1,15 +1,16 @@
 package com.pinyougou.shop.controller;
 import java.util.List;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.pinyougou.pojo.TbSeller;
+import com.pinyougou.manager.service.SellerService;
+
 import com.pinyougou.common.PageResult;
 import com.pinyougou.common.Result;
-import com.pinyougou.manager.service.SellerService;
-import com.pinyougou.pojo.TbSeller;
 /**
  * controller
  * @author Administrator
@@ -49,6 +50,10 @@ public class SellerController {
 	@RequestMapping("/add")
 	public Result add(@RequestBody TbSeller seller){
 		try {
+			
+			//需要添加密码
+			BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+			seller.setPassword(encoder.encode(seller.getPassword()));
 			
 			sellerService.add(seller);
 			return new Result(true, "增加成功");
@@ -90,7 +95,7 @@ public class SellerController {
 	 * @return
 	 */
 	@RequestMapping("/delete")
-	public Result delete(String [] ids){
+	public Result delete(String[] ids){
 		try {
 			sellerService.delete(ids);
 			return new Result(true, "删除成功"); 

@@ -51,9 +51,11 @@ public class GoodsController {
 	@RequestMapping("/add")
 	public Result add(@RequestBody GoodsVo goodsVo){
 		try {
-			//获取添加商家的id存入
-			String name = SecurityContextHolder.getContext().getAuthentication().getName();
-			goodsVo.getGoods().setSellerId(name);
+			
+			//获取当前登录的商家ID
+			String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+			goodsVo.getGoods().setSellerId(sellerId);
+			
 			goodsService.add(goodsVo);
 			return new Result(true, "增加成功");
 		} catch (Exception e) {
