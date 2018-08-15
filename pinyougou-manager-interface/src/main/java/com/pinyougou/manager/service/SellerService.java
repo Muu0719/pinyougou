@@ -48,7 +48,7 @@ public interface SellerService {
 	 * 批量删除
 	 * @param ids
 	 */
-	public void delete(String [] ids);
+	public void delete(String[] ids);
 
 	/**
 	 * 分页
@@ -59,17 +59,10 @@ public interface SellerService {
 	public PageResult findPage(TbSeller seller, int pageNum,int pageSize);
 
 
-	
-	/** 
-	
-	 * @Title:        updateStatus 
-	 * @Description:  修改商户申请状态
-	 * @param:        @param sellerId
-	 * @param:        @param status    
-	 * @return:       void    
-	 * @throws 
-	 * @author        Muu_E-mail:369566919@qq.com
-	 * @Date          2018-08-10 21:08:44
+	/**
+	 * 根据商家ID修改商家状态
+	 * @param sellerId
+	 * @param status
 	 */
 	public void updateStatus(String sellerId, String status);
 	

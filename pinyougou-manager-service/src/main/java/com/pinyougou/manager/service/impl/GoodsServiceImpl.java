@@ -1,19 +1,29 @@
 package com.pinyougou.manager.service.impl;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.alibaba.dubbo.config.annotation.Service;
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.pinyougou.common.PageResult;
+import com.pinyougou.manager.service.GoodsService;
+import com.pinyougou.mapper.TbBrandMapper;
 import com.pinyougou.mapper.TbGoodsDescMapper;
 import com.pinyougou.mapper.TbGoodsMapper;
+import com.pinyougou.mapper.TbItemCatMapper;
+import com.pinyougou.mapper.TbItemMapper;
+import com.pinyougou.mapper.TbSellerMapper;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.TbGoodsDesc;
 import com.pinyougou.pojo.TbGoodsExample;
 import com.pinyougou.pojo.TbGoodsExample.Criteria;
+import com.pinyougou.pojo.TbItem;
 import com.pinyougou.pojo.vo.GoodsVo;
-import com.pinyougou.manager.service.GoodsService;
-
-import com.pinyougou.common.PageResult;
 
 /**
  * 服务实现层
@@ -21,12 +31,15 @@ import com.pinyougou.common.PageResult;
  *
  */
 @Service
+@Transactional
 public class GoodsServiceImpl implements GoodsService {
 
 	@Autowired
 	private TbGoodsMapper goodsMapper;
+	
 	@Autowired
 	private TbGoodsDescMapper goodsDescMapper;
+	
 	/**
 	 * 查询全部
 	 */
@@ -45,21 +58,70 @@ public class GoodsServiceImpl implements GoodsService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
+	@Autowired
+	private TbItemCatMapper itemCatMapper;
+	
+	@Autowired
+	private TbBrandMapper brandMapper;
+	
+	@Autowired
+	private TbSellerMapper sellerMapper;
+	
+	@Autowired
+	private TbItemMapper itemMapper;
+	
 	/**
 	 * 增加
 	 */
 	@Override
 	public void add(GoodsVo goodsVo) {
+		
+		//1、先获取TBGoods对象
 		TbGoods goods = goodsVo.getGoods();
-		//设置商品默认状态 需要审核,添加商品并返回主键
+		//2、先添加TBGoods对象，返回主键
 		goods.setAuditStatus("0");
-		//设置删除状态 为0 不删除
 		goods.setIsDelete("0");
 		goodsMapper.insertSelective(goods);
-		//设置商品描述详情关联的商品ID
-		TbGoodsDesc desc = goodsVo.getGoodsDesc();
-		desc.setGoodsId(goods.getId());
-		goodsDescMapper.insertSelective(desc);
+		//3、添加goodsDesc
+		goodsVo.getGoodsDesc().setGoodsId(goods.getId());
+		goodsDescMapper.insertSelective(goodsVo.getGoodsDesc());
+		
+		//保存ItemList集合的
+		List<TbItem> itemList = goodsVo.getItemList();
+		for (TbItem item : itemList) {
+			
+			//商品的SKU的title是SPU的name+规格
+			String title = "";
+			title = goods.getGoodsName();
+			Map<String,String> specMap = JSON.parseObject(item.getSpec(), Map.class);
+			for(String key : specMap.keySet()){
+				title += "	" + specMap.get(key);
+			}
+			item.setTitle(title);
+			item.setCategoryid(goods.getCategory3Id());
+			item.setCreateTime(new Date());
+			item.setUpdateTime(new Date());
+			item.setGoodsId(goods.getId());
+			item.setSellerId(goods.getSellerId());
+			
+			//获取商品叶子节点分类
+			String categoryName = itemCatMapper.selectByPrimaryKey(item.getCategoryid()).getName();
+			item.setCategory(categoryName);
+			//获取商品品牌
+			String brandName = brandMapper.findOne(goods.getBrandId()).getName();
+			item.setBrand(brandName);
+			//获取商品所属的商家
+			String nickName = sellerMapper.selectByPrimaryKey(goods.getSellerId()).getNickName();
+			item.setSeller(nickName);
+			//图片
+			TbGoodsDesc goodsDesc = goodsDescMapper.selectByPrimaryKey(goods.getId());
+			List<Map> imageList = JSON.parseArray(goodsDesc.getItemImages(), Map.class);
+			if(imageList.size() > 0){
+				item.setImage(String.valueOf(imageList.get(0).get("url")));
+			}
+			//添加
+			itemMapper.insertSelective(item);
+		}
 	}
 
 	

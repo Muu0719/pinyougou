@@ -141,6 +141,5 @@ public class TypeTemplateServiceImpl implements TypeTemplateService {
 			//6、返回Map集合
 			return list;
 		}
-
 	
 }

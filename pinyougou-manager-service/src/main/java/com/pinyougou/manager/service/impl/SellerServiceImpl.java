@@ -1,19 +1,18 @@
 package com.pinyougou.manager.service.impl;
 import java.util.Date;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
+import org.springframework.transaction.annotation.Transactional;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.pinyougou.common.PageResult;
-import com.pinyougou.manager.service.SellerService;
 import com.pinyougou.mapper.TbSellerMapper;
 import com.pinyougou.pojo.TbSeller;
 import com.pinyougou.pojo.TbSellerExample;
 import com.pinyougou.pojo.TbSellerExample.Criteria;
+import com.pinyougou.manager.service.SellerService;
+
+import com.pinyougou.common.PageResult;
 
 /**
  * 服务实现层
@@ -21,6 +20,7 @@ import com.pinyougou.pojo.TbSellerExample.Criteria;
  *
  */
 @Service
+@Transactional
 public class SellerServiceImpl implements SellerService {
 
 	@Autowired
@@ -49,11 +49,10 @@ public class SellerServiceImpl implements SellerService {
 	 */
 	@Override
 	public void add(TbSeller seller) {
-		seller.setStatus("0");
+		//设置必须的属性
 		seller.setCreateTime(new Date());
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		String password = encoder.encode(seller.getPassword());
-		seller.setPassword(password);
+		seller.setStatus("0");
+		//忽略null值
 		sellerMapper.insertSelective(seller);		
 	}
 
@@ -95,7 +94,7 @@ public class SellerServiceImpl implements SellerService {
 		Criteria criteria = example.createCriteria();
 		
 		if(seller!=null){			
-						if(seller.getSellerId()!=null && seller.getSellerId().length()>0){
+			if(seller.getSellerId()!=null && seller.getSellerId().length()>0){
 				criteria.andSellerIdLike("%"+seller.getSellerId()+"%");
 			}
 			if(seller.getName()!=null && seller.getName().length()>0){
@@ -117,7 +116,6 @@ public class SellerServiceImpl implements SellerService {
 				criteria.andTelephoneLike("%"+seller.getTelephone()+"%");
 			}
 			if(seller.getStatus()!=null && seller.getStatus().length()>0){
-				//根据状态判断 必须用equal
 				criteria.andStatusEqualTo(seller.getStatus());
 			}
 			if(seller.getAddressDetail()!=null && seller.getAddressDetail().length()>0){
@@ -169,14 +167,15 @@ public class SellerServiceImpl implements SellerService {
 		return new PageResult(page.getTotal(), page.getResult());
 	}
 
-		
+		@Override
 		public void updateStatus(String sellerId, String status) {
-			TbSellerExample example = new TbSellerExample();
-			Criteria criteria = example.createCriteria();
-			criteria.andSellerIdEqualTo(sellerId);
-			TbSeller seller = new TbSeller();
+			//1、根据商品ID查询商家信息
+			TbSeller seller = sellerMapper.selectByPrimaryKey(sellerId);
+			//2、修改状态
 			seller.setStatus(status);
-			sellerMapper.updateByExampleSelective(seller, example);
+			//3、执行
+			sellerMapper.updateByPrimaryKeySelective(seller);
+			
 		}
 	
 }
