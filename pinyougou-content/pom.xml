@@ -10,8 +10,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>pinyougou-content-interface</module>
-  	<module>pinyougou-content-service</module>
+  	<module>../pinyougou-content-interface</module>
+  	<module>../pinyougou-content-service</module>
   </modules>
   
   
