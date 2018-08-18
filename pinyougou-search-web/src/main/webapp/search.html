@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 	<head>
@@ -11,25 +11,17 @@
 		<link rel="stylesheet" type="text/css" href="css/pages-list.css" />
 		<link rel="stylesheet" type="text/css" href="css/widget-cartPanelView.css" />
 		
-		
-			  
-	    <!-- 引入AngularJS -->
+		<!-- 引入AngularJS -->
 	    <script type="text/javascript" src="../plugins/angularjs/angular.min.js"></script>
 	    
-	    <!-- 分页组件开始 --> 
-		<script src="../plugins/angularjs/pagination.js"></script> 
-		<link rel="stylesheet" href="../plugins/angularjs/pagination.css"> 
-		<!-- 分页组件结束 --> 
-	    
 	    <!-- 引入base_pagination.js -->
-	    <script type="text/javascript" src="../js/base_pagination.js"></script>
-	    <script type="text/javascript" src="../js/service/serachService.js"></script>
+	    <script type="text/javascript" src="../js/base.js"></script>
+	    <script type="text/javascript" src="../js/service/searchService.js"></script>
 	    <script type="text/javascript" src="../js/controller/baseController.js"></script>
 	    <script type="text/javascript" src="../js/controller/searchController.js"></script>
-		
 	</head>
 
-	<body ng-app='pinyougou' ng-controller="searchController">
+	<body ng-app="pinyougou" ng-controller="searchController">
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
 		<div id="nav-bottom">
@@ -92,7 +84,7 @@
 									<form action="" class="sui-form form-inline">
 										<!--searchAutoComplete-->
 										<div class="input-append">
-											<input type="text" id="autocomplete" type="text"  ng-model="searchMap.keywords" class="input-error input-xxlarge" />
+											<input type="text" id="autocomplete" type="text" ng-model="searchMap.keywords" class="input-error input-xxlarge" />
 											<button class="sui-btn btn-xlarge btn-danger" type="button" ng-click="search()">搜索</button>
 										</div>
 									</form>

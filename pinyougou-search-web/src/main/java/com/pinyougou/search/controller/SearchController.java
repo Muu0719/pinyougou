@@ -10,14 +10,16 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.search.service.SearchService;
 
 @RestController
-@RequestMapping("/search")
+@RequestMapping("search")
 public class SearchController {
 
 	@Reference
 	private SearchService searchService;
 	
-	@RequestMapping("/searchMap")
-	public Map<String,Object> searchMap(@RequestBody Map map) {
+	@RequestMapping("searchMap")
+	public Map<String,Object> searchMap(@RequestBody Map map){
+		//通过Service来查询
 		return searchService.search(map);
 	}
+	
 }

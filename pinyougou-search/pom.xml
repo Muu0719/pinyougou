@@ -10,8 +10,8 @@
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   <modules>
-  	<module>pinyougou-search-interface</module>
-  	<module>pinyougou-search-service</module>
+  	<module>../pinyougou-search-interface</module>
+  	<module>../pinyougou-search-service</module>
   </modules>
   
   <build>

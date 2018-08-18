@@ -1,11 +1,14 @@
-app.controller('searchController',function($scope,$controller,serachservice){
-	$controller('baseController',{$scope:$scope});
+app.controller("searchController",function($scope,$controller,searchService){
 	
-	$scope.searchMap = {'keywords':''};
+	$controller("baseController",{$scope:$scope});
 	
-	$scope.search = function(){
-		serachService.search($scope.searchMap).success(function(response){
+	$scope.searchMap={'keywords':''};
+	
+	$scope.search=function(){
+		searchService.search($scope.searchMap).success(function(response){
 			$scope.list = response.rows;
-		})
+			
+		});
 	}
+	
 });
