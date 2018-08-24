@@ -15,7 +15,7 @@ app.controller('userController' ,function($scope,userService){
 		userService.add($scope.entity,$scope.smsCode).success(function(response){
 			if(response.success){
 				//跳转到登录页面
-	        	location.href="http://user.pinyougou.com/login.html";
+	        	location.href="http://user.pinyougou.com/home-index.html";
 			}else{
 				alert(response.message);
 			}
@@ -39,4 +39,10 @@ app.controller('userController' ,function($scope,userService){
 		});
 	}
 	 
+	//我的订单中初始化，获取当前登录者用户信息
+	$scope.showLoginName=function(){
+		userService.showLoginName().success(function(response){
+			$scope.userEntity = response;
+		});
+	}
 });	

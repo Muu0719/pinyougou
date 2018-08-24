@@ -30,6 +30,9 @@ app.service('userService',function($http){
 		return $http.post('../user/search?page='+page+"&rows="+rows, searchEntity);
 	}   
 	this.getSmsCode=function(phone){
-		return $http.get("../user/sendSms?phone="+phone );
+		return $http.get("../user/sendSms?phone="+phone);
+	}
+	this.showLoginName=function(){
+		return $http.get("../user/showName");
 	}
 });

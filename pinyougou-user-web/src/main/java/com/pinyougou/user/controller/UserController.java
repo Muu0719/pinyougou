@@ -1,6 +1,9 @@
 package com.pinyougou.user.controller;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -143,4 +146,13 @@ public class UserController {
 		}
 	}
 	
+	//获取登陆的用户信息
+	@RequestMapping("/showName")
+	public Map showName() {
+		String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
+		Map map = new HashMap();
+		map.put("loginName", loginName);
+		
+		return map;
+	}
 }

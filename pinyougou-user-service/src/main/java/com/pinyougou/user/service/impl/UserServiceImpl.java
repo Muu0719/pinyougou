@@ -1,22 +1,15 @@
 package com.pinyougou.user.service.impl;
-import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.dubbo.config.annotation.Service;
-import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.pinyougou.common.HttpClient;
 import com.pinyougou.common.PageResult;
 import com.pinyougou.mapper.TbUserMapper;
 import com.pinyougou.pojo.TbUser;
@@ -163,18 +156,18 @@ public class UserServiceImpl implements UserService {
 				System.err.println("验证码：" + code);
 				//2、放在redis中
 				redisTemplate.boundHashOps("SmsCode").put(phone, code);
-				//3、调用HTTPClient发送短信
-				HttpClient client = new HttpClient("http://localhost:8088/sms/sendSms");
-				Map<String,String> map = new HashMap<>();
-				map.put("phone_number", phone);
-				map.put("sign_name", "王子豪");
-				map.put("template_code", "SMS_142616859");//SMS_142616859
-				Map<String,String> m = new HashMap<String,String>();
-				m.put("code", code+"");
-				map.put("template_param", JSON.toJSONString(m));
-				
-				client.setParameter(map);
-				client.post();
+//				//3、调用HTTPClient发送短信
+//				HttpClient client = new HttpClient("http://localhost:8088/sms/sendSms");
+//				Map<String,String> map = new HashMap<>();
+//				map.put("phone_number", phone);
+//				map.put("sign_name", "王子豪");
+//				map.put("template_code", "SMS_142616859");//SMS_142616859
+//				Map<String,String> m = new HashMap<String,String>();
+//				m.put("code", code+"");
+//				map.put("template_param", JSON.toJSONString(m));
+//				
+//				client.setParameter(map);
+//				client.post();
 				
 				//在企业中用到activeMQ发短信比较多！
 				
