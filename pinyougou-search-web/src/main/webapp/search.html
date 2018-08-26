@@ -21,7 +21,7 @@
 	    <script type="text/javascript" src="../js/controller/searchController.js"></script>
 	</head>
 
-	<body ng-app="pinyougou" ng-controller="searchController">
+	<body ng-app="pinyougou" ng-controller="searchController" ng-init="findAll()">
 		<!-- 头部栏位 -->
 		<!--页面顶部-->
 		<div id="nav-bottom">
@@ -173,7 +173,7 @@
 				<div class="type-wrap">
 					<div class="fl key">商品分类</div>
 					<div class="fl value">
-						<a href="#">手机</a>  <a href="#">电视</a>
+						<a ng-click="addFilterCondition('category','手机')">手机</a>  <a ng-click="addFilterCondition('category','电视')">电视</a>
 					</div>
 					<div class="fl ext"></div>
 				</div>
@@ -181,9 +181,9 @@
 					<div class="fl key brand">品牌</div>
 					<div class="value logos">
 						<ul class="logo-list">
-							<li><img src="img/_/phone01.png" /></li>
-							<li><img src="img/_/phone02.png" /></li>
-							<li><img src="img/_/phone03.png" /></li>
+							<li><img src="img/_/phone01.png" ng-click="addFilterCondition('brand','苹果')"/></li>
+							<li><img src="img/_/phone02.png" ng-click="addFilterCondition('brand','三星')"/></li>
+							<li><img src="img/_/phone03.png" ng-click="addFilterCondition('brand','飞利浦')"/></li>
 							<li><img src="img/_/phone04.png" /></li>
 							<li><img src="img/_/phone05.png" /></li>
 							<li><img src="img/_/phone06.png" /></li>
@@ -211,22 +211,19 @@
 					<div class="fl value">
 						<ul class="type-list">
 							<li>
-								<a>GSM（移动/联通2G）</a>
+								<a ng-click="addFilterCondition('网络','电信2G')">电信2G</a>
 							</li>
 							<li>
-								<a>电信2G</a>
+								<a ng-click="addFilterCondition('网络','电信3G')">电信3G</a>
 							</li>
 							<li>
-								<a>电信3G</a>
+								<a ng-click="addFilterCondition('网络','移动3G')">移动3G</a>
 							</li>
 							<li>
-								<a>移动3G</a>
+								<a ng-click="addFilterCondition('网络','联通3G')">联通3G</a>
 							</li>
 							<li>
-								<a>联通3G</a>
-							</li>
-							<li>
-								<a>联通4G</a>
+								<a ng-click="addFilterCondition('网络','联通4G')">联通4G</a>
 							</li>
 							<li>
 								<a>电信3G</a>
@@ -245,63 +242,50 @@
 					<div class="fl ext"></div>
 				</div>
 				<div class="type-wrap">
-					<div class="fl key">显示屏尺寸</div>
+					<div class="fl key">机身内存</div>
 					<div class="fl value">
 						<ul class="type-list">
 							<li>
-								<a>4.0-4.9英寸</a>
+								<a ng-click="addFilterCondition('机身内存','2G')">2G</a>
 							</li>
 							<li>
-								<a>4.0-4.9英寸</a>
+								<a ng-click="addFilterCondition('机身内存','4G')">4G</a>
+							</li>
+								<li>
+								<a ng-click="addFilterCondition('机身内存','6G')">6G</a>
+							</li>
+								<li>
+								<a ng-click="addFilterCondition('机身内存','8G')">8G</a>
+							</li>
+								<li>
+								<a ng-click="addFilterCondition('机身内存','16G')">16G</a>
 							</li>
 						</ul>
 					</div>
 					<div class="fl ext"></div>
 				</div>
-				<div class="type-wrap">
-					<div class="fl key">摄像头像素</div>
-					<div class="fl value">
-						<ul class="type-list">
-							<li>
-								<a>1200万以上</a>
-							</li>
-							<li>
-								<a>800-1199万</a>
-							</li>
-							<li>
-								<a>1200-1599万</a>
-							</li>
-							<li>
-								<a>1600万以上</a>
-							</li>
-							<li>
-								<a>无摄像头</a>
-							</li>
-						</ul>
-					</div>
-					<div class="fl ext"></div>
-				</div>
+				
 				<div class="type-wrap">
 					<div class="fl key">价格</div>
 					<div class="fl value">
 						<ul class="type-list">
 							<li>
-								<a>0-500元</a>
+								<a ng-click="addFilterCondition('price','0-500')">0-500元</a>
 							</li>
 							<li>
-								<a>500-1000元</a>
+								<a ng-click="addFilterCondition('price','500-1000')">500-1000元</a>
 							</li>
 							<li>
-								<a>1000-1500元</a>
+								<a ng-click="addFilterCondition('price','1000-1500')">1000-1500元</a>
 							</li>
 							<li>
-								<a>1500-2000元</a>
+								<a ng-click="addFilterCondition('price','1500-2000')">1500-2000元</a>
 							</li>
 							<li>
-								<a>2000-3000元 </a>
+								<a ng-click="addFilterCondition('price','2000-3000')">2000-3000元 </a>
 							</li>
 							<li>
-								<a>3000元以上</a>
+								<a ng-click="addFilterCondition('price','3000-*')">3000元以上</a>
 							</li>
 						</ul>
 					</div>
@@ -369,9 +353,10 @@
 											<i>{{entity.price.toFixed(2)}}</i>
 										</strong>
 								</div>
-								<div class="attr">
-									<em>{{entity.title}}</em>
-								</div>
+								<div class="attr" ng-bind-html="entity.title | trustHtml"></div>
+<!-- 								<div class="attr"> -->
+<!-- 									<em>{{entity.title}}</em> -->
+<!-- 								</div> -->
 								<div class="cu">
 									<em></em>
 								</div>

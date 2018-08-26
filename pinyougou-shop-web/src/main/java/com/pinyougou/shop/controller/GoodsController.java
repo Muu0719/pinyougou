@@ -10,6 +10,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.common.PageResult;
 import com.pinyougou.common.Result;
 import com.pinyougou.manager.service.GoodsService;
+import com.pinyougou.page.service.PageService;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.pojo.vo.GoodsVo;
 /**
@@ -116,6 +117,14 @@ public class GoodsController {
 	@RequestMapping("/search")
 	public PageResult search(@RequestBody TbGoods goods, int page, int rows  ){
 		return goodsService.findPage(goods, page, rows);		
+	}
+	
+	@Reference
+	private PageService pageService;
+	
+	@RequestMapping("/getHtml")
+	public void getHtml(Long goodsId) {
+		pageService.getHtml(goodsId);
 	}
 	
 }

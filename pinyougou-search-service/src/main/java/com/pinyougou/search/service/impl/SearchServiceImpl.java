@@ -56,6 +56,16 @@ public class SearchServiceImpl implements SearchService {
 //			filterQuery.addCriteria(contains);
 //			query.addFilterQuery(filterQuery);
 //		}
+		//2.3添加分类的过滤条件
+		String category = (String)map.get("category");
+		if(null != category) {
+			//添加分类过滤条件,这里的代码好像不能简化,每次都要根据不同的查询条件new一个Criteria.
+			Criteria filterCriteria  = new Criteria("item_category").contains(category);
+			SimpleFilterQuery filterQuery = new SimpleFilterQuery(filterCriteria );
+			query.addFilterQuery(filterQuery);
+		}
+		
+		
 //		//2.4 添加品牌过滤条件
 //		String brand = (String)map.get("brand");
 //		if(brand != null && !"".equals(brand)){
@@ -131,7 +141,6 @@ public class SearchServiceImpl implements SearchService {
 		for(HighlightEntry<TbItem> h: resultPage.getHighlighted()){//循环高亮入口集合
 			TbItem item = h.getEntity();//获取原实体类	
 			if(h.getHighlights().size()>0 && h.getHighlights().get(0).getSnipplets().size()>0){
-				System.out.println("---------");
 				item.setTitle(h.getHighlights().get(0).getSnipplets().get(0));//设置高亮的结果
 			}	
 		}

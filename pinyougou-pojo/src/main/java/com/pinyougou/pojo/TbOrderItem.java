@@ -1,8 +1,9 @@
 package com.pinyougou.pojo;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TbOrderItem {
+public class TbOrderItem implements Serializable {
     private Long id;
 
     private Long itemId;
@@ -101,5 +102,11 @@ public class TbOrderItem {
 
     public void setSellerId(String sellerId) {
         this.sellerId = sellerId == null ? null : sellerId.trim();
+    }
+    
+    public void test123() {
+    	String str1 = "aa";
+    	String str2 = str1 + "123";
+    	
     }
 }
