@@ -1,4 +1,4 @@
-app.controller('cartController',function($scope,cartService){
+app.controller('cartController',function($scope,cartService, addressService){
 	
 	
 	$scope.findCartList = function(){
@@ -15,4 +15,22 @@ app.controller('cartController',function($scope,cartService){
 		})
 	}
 	
+	//获取地址
+	$scope.findAddressList = function(){
+		addressService.findAddressList().success(function(response){
+			$scope.addressList = response;
+		})
+	}
+	
+	//判断是收货人是否选中
+	$scope.selectAddress = function(address){
+		$scope.address = address;
+	}
+	$scope.isSelectedAddress = function(address){
+		if(address ==$scope.address){
+			return true;
+		} else {
+			return false;
+		}
+	}
 })

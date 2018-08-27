@@ -3,7 +3,9 @@ package com.pinyougou.search.service.impl;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.solr.core.SolrTemplate;
@@ -58,84 +60,77 @@ public class SearchServiceImpl implements SearchService {
 //		}
 		//2.3添加分类的过滤条件
 		String category = (String)map.get("category");
-		if(null != category) {
+		if(null != category && category.trim().length() > 0) {
 			//添加分类过滤条件,这里的代码好像不能简化,每次都要根据不同的查询条件new一个Criteria.
 			Criteria filterCriteria  = new Criteria("item_category").contains(category);
 			SimpleFilterQuery filterQuery = new SimpleFilterQuery(filterCriteria );
 			query.addFilterQuery(filterQuery);
 		}
+		//2.4添加品牌过滤
+		String brand = (String)map.get("brand");
+		if(null != brand && brand.trim().length() > 0) {
+			Criteria filterCriteria = new Criteria("item_brand").contains(brand);
+			SimpleFilterQuery filterQuery = new SimpleFilterQuery(criteria);
+			query.addFilterQuery(filterQuery);
+		}
 		
+		//2,5添加价格过滤条件
+		String price = (String)map.get("price");
+		if(null != price && price.trim().length() > 0) {
+			String[] split = price.split("-");
+			if(null != split) {
+				if(null != split[0] && !"0".equals(split[0])) {
+					Criteria filterCriteria = new Criteria("item_price").greaterThanEqual(split[0]);
+					SimpleFilterQuery filterQuery = new SimpleFilterQuery(criteria);
+					query.addFilterQuery(filterQuery);
+				}
+				if(null != split[1] && !"*".equals(split[1])) {
+					Criteria filterCriteria = new Criteria("item_price").lessThanEqual(split[1]);
+					SimpleFilterQuery filterQuery = new SimpleFilterQuery(criteria);
+					query.addFilterQuery(filterQuery);
+				}
+			}
 		
-//		//2.4 添加品牌过滤条件
-//		String brand = (String)map.get("brand");
-//		if(brand != null && !"".equals(brand)){
-//			//添加分类的过滤
-//			SimpleFilterQuery filterQuery = new SimpleFilterQuery();
-//			Criteria contains = new Criteria("item_brand").contains(brand);
-//			filterQuery.addCriteria(contains);
-//			query.addFilterQuery(filterQuery);
-//		}
-//		//2.5 添加价格过滤条件
-//		String prices = (String)map.get("price");
-//		if(prices != null && !"".equals(prices)){
-//			//先根据-拆分
-//			String[] split = prices.split("-");
-//			
-//			if(!"0".equals(split[0])){
-//				//添加分类的过滤
-//				SimpleFilterQuery filterQuery = new SimpleFilterQuery();
-//				Criteria contains = new Criteria("item_price").greaterThanEqual(split[0]);
-//				filterQuery.addCriteria(contains);
-//				query.addFilterQuery(filterQuery);
-//			}
-//			if(!"*".equals(split[1])){
-//				//添加分类的过滤
-//				SimpleFilterQuery filterQuery = new SimpleFilterQuery();
-//				Criteria contains = new Criteria("item_price").lessThanEqual(split[1]);
-//				filterQuery.addCriteria(contains);
-//				query.addFilterQuery(filterQuery);
-//			}
-//		}
-//		//2.6 添加规格的过滤条件	{"网络":"移动3G","机身内存"："16G"}
-////		Map.put("网络","移动3G");Map.put("机身内存","16G");
-//		Map<String,String> m = (Map<String,String>)map.get("spec");
-//		for(String key : m.keySet()){
-//			//添加分类的过滤
-//			SimpleFilterQuery filterQuery = new SimpleFilterQuery();
-//			Criteria contains = new Criteria("item_spec_"+key).contains(m.get(key));
-//			filterQuery.addCriteria(contains);
-//			query.addFilterQuery(filterQuery);
-//		}
-//		//2.7 添加排序条件
-//		String sort = (String)map.get("sort");
-//		String sortField = (String)map.get("sortField");
-//		if(sort != null && !"".equals(sort)){
-//			if("ASC".equals(sort)){
-//				//1、排序规则；2、排序的域
-//				Sort s = new Sort(Sort.Direction.ASC, sortField);
-//				query.addSort(s);
-//				
-//			} 
-//			if("DESC".equals(sort)){
-//				//1、排序规则；2、排序的域
-//				Sort s = new Sort(Sort.Direction.DESC, sortField);
-//				query.addSort(s);
-//			}
-//		}
-//		//2.8 添加分页的数据
-//		Integer page = (Integer) map.get("page");
-//		if(page == null){
-//			page = 1;
-//		}
-//		Integer pageSize = (Integer)map.get("pageSize");
-//		if(pageSize == null){
-//			pageSize = 20;
-//		}
-//		//添加
-//		query.setOffset((page - 1) * pageSize);//分页起始索引
-//		query.setRows(pageSize);//每页显示记录数
-//		
-		//3、执行查询
+		}
+//		2.6 添加规格的过滤条件	{"网络":"移动3G","机身内存"："16G"}
+//		Map.put("网络","移动3G");Map.put("机身内存","16G");key 就是属性名字,value就是对应的值
+		Map<String,String> specMap = (Map<String,String>)map.get("spec");
+		Set<String> keySet = specMap.keySet();
+		for (String key : keySet) {
+			Criteria filterCriteria = new Criteria("item_spec_" + key).contains(specMap.get(key));
+			SimpleFilterQuery filterQuery = new SimpleFilterQuery(criteria);
+			query.addFilterQuery(filterQuery);
+		}
+//		2.7 添加排序条件
+		String sort = (String)map.get("sort");
+		String sortField = (String)map.get("sortField");
+		if(sort != null && !"".equals(sort)){
+			if("ASC".equals(sort)){
+				//1、排序规则；2、排序的域
+				Sort s = new Sort(Sort.Direction.ASC, sortField);
+				query.addSort(s);
+				
+			} 
+			if("DESC".equals(sort)){
+				//1、排序规则；2、排序的域
+				Sort s = new Sort(Sort.Direction.DESC, sortField);
+				query.addSort(s);
+			}
+		}
+		//2.8 添加分页的数据
+		Integer page = (Integer) map.get("page");
+		if(page == null){
+			page = 1;
+		}
+		Integer pageSize = (Integer)map.get("pageSize");
+		if(pageSize == null){
+			pageSize = 20;
+		}
+		//添加
+		query.setOffset((page - 1) * pageSize);//分页起始索引
+		query.setRows(pageSize);//每页显示记录数
+		
+//		3、执行查询
 		HighlightPage<TbItem> resultPage = solrTemplate.queryForHighlightPage(query, TbItem.class); 
 		//SpringDataSolr中获取高亮数据的方法
 		for(HighlightEntry<TbItem> h: resultPage.getHighlighted()){//循环高亮入口集合
