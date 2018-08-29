@@ -19,65 +19,56 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	private TbItemMapper itemMapper;
-	@Autowired
-	private RedisTemplate redisTemplate;
 
-	// 查询redis中购物车信息,不会返回Null,如果查不到,返回空集合
-	public List<Cart> findCartListFromRedis(String sessionId) {
-		List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cartList").get(sessionId);
-		if (null != cartList) {
-			return cartList;
-		}
-		return new ArrayList<>();
-	}
-
-	// 添加旧的购物车到新的购物车,并返回一个新的购物车对象
+	@Override
 	public List<Cart> addGoodsToCartList(List<Cart> cartList, Long itemId, Integer num) {
-		// 查询商品
+
+		
+		// 1、根据这个商品ID查询商品对象
 		TbItem item = itemMapper.selectByPrimaryKey(itemId);
-		// 判断商品状态
-		if (null == item) {
-			new RuntimeException("无效商品!");
+		if (item == null) {
+			throw new RuntimeException("无效商品");
 		}
-		if ("1".equals(item.getStatus())) {
-			new RuntimeException("无效商品(商品已下架)!");
+		if (!"1".equals(item.getStatus())) {
+			throw new RuntimeException("无效商品");
 		}
-		// 根据商品中的sellerId，去购物车集合中查询是否存储
+		// 2、根据商品中的sellerId，去购物车集合中查询是否存储
 		Cart cart = this.queryCartBySellerId(cartList, item.getSellerId());
-		// 把商品对应的商家信息放到cart对象中
-		if (null != cart) {
-			// 证明集合中有该商家Id(购物车中已经有在该商家的商品)
+		// 3、判断此商品对应的商家ID是否在购物车存储
+		if (cart != null) {// 已存在
 			// 判断此商品是否已在购物车对应的商品集合中
-			TbOrderItem orderItem = this.queryQrderItemByItemId(cart.getOrderItemList(), itemId);
-			if (null != orderItem) {
-				// 证明购物车中已经有该商品,当前数量再加num即可
+			TbOrderItem orderItem = this.queryOrderItemByItemId(cart.getOrderItemList(), itemId);
+			if (orderItem != null) {// 已存在
+				// 修改商品存在购物车中的数量和价格
 				orderItem.setNum(orderItem.getNum() + num);
 				orderItem.setTotalFee(new BigDecimal(orderItem.getPrice().doubleValue() * orderItem.getNum()));
-				// 判断商品数量是否合理
-				if (orderItem.getNum() < 1) {
+
+				// 判断商品的数量是否正确
+				// 如果商品的数量小于等于0，就把商品orderItem从集合中删除
+				if (orderItem.getNum() <= 0) {
 					cart.getOrderItemList().remove(orderItem);
 				}
+				// 如果商品的集合的大小为0，那么就把cart对象从CartList中删除
 				if (cart.getOrderItemList().size() == 0) {
 					cartList.remove(cart);
 				}
+
 			} else {
-				// 证明购物车中没有该商品,创建新的对象数量设置为num即可
+				// 如果没有，创建一个新对象
 				orderItem = this.createOrderItem(item, num);
+				// 把orderItem数据放在集合中
 				cart.getOrderItemList().add(orderItem);
 			}
 		} else {
-
-			// 需要继续创建TbOrderItem订单项对象,把新加的商品信息添加进去
-			TbOrderItem orderItem = this.createOrderItem(item, num);
-			List<TbOrderItem> orderItemList = new ArrayList<>();
-			orderItemList.add(orderItem);
-			// 购物车中不存在该商家的商品
 			cart = new Cart();
 			cart.setSellerId(item.getSellerId());
 			cart.setSellerName(item.getSeller());
+			// 如果没有，创建一个新对象
+			TbOrderItem orderItem = this.createOrderItem(item, num);
+			List<TbOrderItem> orderItemList = new ArrayList<>();
+			orderItemList.add(orderItem);
 			cart.setOrderItemList(orderItemList);
 			cartList.add(cart);
-
 		}
 		return cartList;
 	}
@@ -98,15 +89,21 @@ public class CartServiceImpl implements CartService {
 		orderItem.setPrice(item.getPrice());
 		orderItem.setSellerId(item.getSellerId());
 		orderItem.setTotalFee(new BigDecimal(item.getPrice().doubleValue() * num));
-
 		orderItem.setTitle(item.getTitle());
 		return orderItem;
 	}
 
-	private TbOrderItem queryQrderItemByItemId(List<TbOrderItem> orderItemList, Long itemId) {
-		for (TbOrderItem tbOrderItem : orderItemList) {
-			if (tbOrderItem.getItemId().equals(itemId)) {
-				return tbOrderItem;
+	/**
+	 * 根据商品的ID查询是否在购物车商品集合中
+	 * 
+	 * @param orderItemList
+	 * @param itemId
+	 * @return
+	 */
+	private TbOrderItem queryOrderItemByItemId(List<TbOrderItem> orderItemList, Long itemId) {
+		for (TbOrderItem orderItem : orderItemList) {
+			if (orderItem.getItemId().longValue() == itemId.longValue()) {
+				return orderItem;
 			}
 		}
 		return null;
@@ -121,32 +118,42 @@ public class CartServiceImpl implements CartService {
 	 */
 	private Cart queryCartBySellerId(List<Cart> cartList, String sellerId) {
 		for (Cart cart : cartList) {
-			if (cart.getSellerId().equals(sellerId)) {
+			if (sellerId.equals(cart.getSellerId())) {
 				return cart;
 			}
 		}
 		return null;
 	}
 
-	public void addCartListToRedis(String key, List<Cart> cartList) {
-		redisTemplate.boundHashOps("cartList").put(key, cartList);
+	@Autowired
+	private RedisTemplate redisTemplate;
 
-	}
 	
-	//合并购物车
-	public List<Cart> mergeCartList(List<Cart> cartList_session, List<Cart> cartList) {
-		for (Cart cart : cartList) {
-			List<TbOrderItem> orderItemList = cart.getOrderItemList();
-			for (TbOrderItem orderItem : orderItemList) {
-				cartList = this.addGoodsToCartList(cartList, orderItem.getItemId(), orderItem.getNum());
+	
+	public List<Cart> findCartListFromRedis(String sessionId) {
+		List<Cart> cartList = (List<Cart>) redisTemplate.boundHashOps("cartList").get(sessionId);
+		if (cartList != null) {
+			return cartList;
+		}
+		return new ArrayList<>();
+	}
+
+	public void addCartListToRedis(String sessionId, List<Cart> cartList) {
+		redisTemplate.boundHashOps("cartList").put(sessionId, cartList);
+	}
+
+	public List<Cart> mergeCartList(List<Cart> cartList, List<Cart> cartList_session) {
+		for (Cart cart : cartList_session) {
+			for (TbOrderItem item : cart.getOrderItemList()) {
+				cartList = this.addGoodsToCartList(cartList, item.getItemId(), item.getNum());
 			}
 		}
 		return cartList;
 	}
 
 	@Override
-	public void delCartListToRedis(String sessionId) {
-		redisTemplate.boundHashOps("cartList").delete(sessionId);
+	public void delCartListToRedis(String key) {
+		redisTemplate.boundHashOps("cartList").delete(key);
 	}
 
 }

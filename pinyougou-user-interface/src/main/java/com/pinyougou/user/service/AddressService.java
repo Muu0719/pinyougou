@@ -68,6 +68,6 @@ public interface AddressService {
 	 * @author        Muu_E-mail:369566919@qq.com
 	 * @Date          2018-08-27 21:08:07
 	 */
-	public List<TbAddress> findAddressListByUserId(String userId);
+	public List<TbAddress> findAddressList(String userId);
 	
 }

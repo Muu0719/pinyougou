@@ -18,4 +18,6 @@
   		<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
+  <version>0.0.1-SNAPSHOT</version>
+  <groupId>com.pinyougou</groupId>
 </project>

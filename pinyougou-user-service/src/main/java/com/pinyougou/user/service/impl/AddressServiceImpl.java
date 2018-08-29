@@ -125,7 +125,7 @@ public class AddressServiceImpl implements AddressService {
 	}
 
 		
-		public List<TbAddress> findAddressListByUserId(String userId) {
+		public List<TbAddress> findAddressList(String userId) {
 			TbAddressExample example = new TbAddressExample();
 			Criteria criteria = example.createCriteria();
 			criteria.andUserIdEqualTo(userId);

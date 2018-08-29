@@ -1,14 +1,12 @@
-app.service('cartService',function($http){
+app.service("cartService",function($http){
+	this.findCartList=function(){
+		return $http.get("../cart/findCartList");
+	}
+	this.addGoodsToCartList=function(itemId,num){
+		return $http.get("../cart/addGoodsToCartList?itemId="+itemId+"&num="+num);
+	}
 	
-	this.findCartList = function(){
-		return $http.get('../cart/findCartList');
-	};
-	
-	this.addGoodsToCartList = function(itemId, num){
-		return $http.get('../cart/addGoodsToCartList?itemId='+ itemId + '&num=' + num);
-	};
-	
-	//计算购物车里所有商品总价和总个数
+	//求合计
 	this.sum=function(cartList){		
 		
 		var totalValue={totalNum:0, totalMoney:0.00 };//合计实体
@@ -23,5 +21,5 @@ app.service('cartService',function($http){
 		}
 		return totalValue;
 	}
-
-})
+	
+});

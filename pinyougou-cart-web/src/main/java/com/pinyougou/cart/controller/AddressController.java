@@ -5,12 +5,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.alibaba.dubbo.config.annotation.Reference;
-import com.pinyougou.pojo.TbAddress;
-import com.pinyougou.user.service.AddressService;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.pinyougou.common.PageResult;
 import com.pinyougou.common.Result;
+import com.pinyougou.pojo.TbAddress;
+import com.pinyougou.user.service.AddressService;
 /**
  * controller
  * @author Administrator
@@ -112,10 +112,13 @@ public class AddressController {
 		return addressService.findPage(address, page, rows);		
 	}
 	
-	@RequestMapping("/findAddressListByUserId")
-	public List<TbAddress> findAddressListByUserId(){
+	@RequestMapping("findAddressList")
+	public List<TbAddress> findAddressList(){
+		//获取当前登录者用户信息
 		String loginName = SecurityContextHolder.getContext().getAuthentication().getName();
-		return (List<TbAddress>)addressService.findAddressListByUserId(loginName);
+		List<TbAddress> list = addressService.findAddressList(loginName);
+		return list;
 	}
+	
 	
 }
